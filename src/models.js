@@ -1,122 +1,266 @@
 const { Sequelize, DataTypes } = require('sequelize');
 require('dotenv').config();
 
+/**
+ * Enlace a la base de datos
+ * 
+ * @author Yahir Emmanuel Romo Palomino
+ * @version 1.0
+ */
 const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
-  dialect: process.env.DB_DIALECT,
   host: process.env.DB_IP,
+  dialect: 'mysql',
 });
 
-const Observacion = sequelize.define('Observacion', {
-  idObservacion: {
+/**
+ * Definicion de la tabla planta
+ * 
+ * @author Yahir Emmanuel Romo Palomino
+ * @version 1.0
+ */
+const Planta = sequelize.define('Planta', {
+  id: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    autoIncrement: true,
     primaryKey: true,
-    autoIncrement: true
   },
-  nombreCientifico: {
-    type: DataTypes.STRING(60),
-    allowNull: false,
-    unique: true
-  },
-  nombreColoquial: {
+  nombre_cientifico: {
     type: DataTypes.STRING(100),
-    allowNull: false
+    unique: true,
+    allowNull: false,
+  },
+  nombre_comun: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
   },
   familia: {
     type: DataTypes.STRING(50),
     allowNull: false,
-    unique: true
   },
-  formaBiologica: {
-    type: DataTypes.STRING(40),
-    allowNull: false
+  forma_biologica: {
+    type: DataTypes.STRING(50),
+    allowNull: false,
+  },
+  tipo_vegetacion: {
+    type: DataTypes.STRING(100),
+    allowNull: false,
+  },
+  vulnerada: {
+    type: DataTypes.BOOLEAN,
+    allowNull: false,
+  },
+  informacion_adicional: {
+    type: DataTypes.STRING(300),
+    allowNull: false,
+  },
+}, {
+  tableName: 'plantas',
+  timestamps: false,
+});
+
+/**
+ * Definicion de la tabla observacion
+ * 
+ * @author Yahir Emmanuel Romo Palomino
+ * @version 1.0
+ */
+const Observacion = sequelize.define('Observacion', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
   },
   localidad: {
     type: DataTypes.STRING(80),
-    allowNull: false
+    allowNull: false,
   },
   ubicacion: {
     type: DataTypes.STRING(80),
-    allowNull: false
+    allowNull: false,
   },
   coordenadas: {
     type: DataTypes.JSON,
-    allowNull: false
+    allowNull: false,
   },
   fisiografia: {
     type: DataTypes.STRING(50),
-    allowNull: false
+    allowNull: false,
   },
-  tipoVegetacion: {
-    type: DataTypes.STRING(60),
-    allowNull: false
-  },
-  fechaColecta: {
+  fecha_colecta: {
     type: DataTypes.DATEONLY,
-    allowNull: false
+    allowNull: false,
   },
   colector: {
     type: DataTypes.STRING(100),
-    allowNull: false
+    allowNull: false,
   },
   identificador: {
     type: DataTypes.STRING(100),
-    allowNull: false
+    allowNull: false,
   },
-  informacionAdicional: {
+  plantas_idPlantas: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: Planta,
+      key: 'id',
+    },
+  },
+}, {
+  tableName: 'observaciones',
+  timestamps: false,
+});
+
+/**
+ * Definicion de la tabla imagen
+ * 
+ * @author Yahir Emmanuel Romo Palomino
+ * @version 1.0
+ */
+const Imagen = sequelize.define('Imagen', {
+  id: {
+    type: DataTypes.INTEGER,
+    autoIncrement: true,
+    primaryKey: true,
+  },
+  enlace_imagen: {
     type: DataTypes.STRING(255),
     allowNull: false,
-    defaultValue: 'Sin informacion adicional.'
   },
-},{timestamps:false});
+}, {
+  tableName: 'imagenes',
+  timestamps: false,
+});
 
-const ListaImagenes = sequelize.define('ListaImagenes', {
-  idListaImagenes: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    primaryKey: true,
-    autoIncrement: true
-  },
-  enlaceImagen: {
-    type: DataTypes.STRING(60),
-    allowNull: false
-  },
-  ultimaFechaModificacion: {
-    type: DataTypes.DATEONLY,
-    allowNull: false
-  }
-},{timestamps:false});
-
+/**
+ * Definicion de la tabla log
+ * 
+ * @author Yahir Emmanuel Romo Palomino
+ * @version 1.0
+ */
 const Log = sequelize.define('Log', {
-  idLog: {
+  id: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    autoIncrement: true,
     primaryKey: true,
-    autoIncrement: true
   },
   fecha: {
     type: DataTypes.DATE,
-    allowNull: false
+    allowNull: false,
   },
   tipoEvento: {
-    type: DataTypes.ENUM('INSERCION', 'EDICION', 'AÑADIDO', 'ELIMINADO'),
-    allowNull: false
+    type: DataTypes.ENUM('INSERCION', 'EDICION', 'CONSULTA', 'ELIMINACION'),
+    allowNull: false,
   },
-  origen: {
-    type: DataTypes.STRING(30),
-    allowNull: false
-  }
-},{timestamps:false});
+  descripcion: {
+    type: DataTypes.STRING(60),
+    allowNull: false,
+  },
+}, {
+  tableName: 'log',
+  timestamps: false,
+});
 
-Observacion.hasMany(ListaImagenes, { foreignKey: 'idObservacion' });
-ListaImagenes.belongsTo(Observacion, { foreignKey: 'idObservacion' });
+/**
+ * Definicion de la tabla ObservacionImagen
+ * 
+ * @author Yahir Emmanuel Romo Palomino
+ * @version 1.0
+ */
+const ObservacionImagen = sequelize.define('ObservacionImagen', {
+  observaciones_id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    references: {
+      model: Observacion,
+      key: 'id',
+    },
+  },
+  imagenes_id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    references: {
+      model: Imagen,
+      key: 'id',
+    },
+  },
+}, {
+  tableName: 'observacionImagenes',
+  timestamps: false,
+});
 
-sequelize.sync()
-  .then(() => {
-    console.log('Database synchronized');
-  })
-  .catch(err => {
-    console.error('Database synchronization failed: ', err);
-  });
+/**
+ * Definicion de la tabla cuenta
+ * 
+ * @author Yahir Emmanuel Romo Palomino
+ * @version 1.0
+ */
+const Cuenta = sequelize.define('Cuenta', {
+  UID_cuenta: {
+    type: DataTypes.STRING(128),
+    primaryKey: true,
+  },
+  id_imagen_perfil: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    references: {
+      model: Imagen,
+      key: 'id',
+    },
+  },
+}, {
+  tableName: 'cuentas',
+  timestamps: false,
+});
 
-module.exports = { Observacion, ListaImagenes, Log, sequelize };
+/**
+ * Definicion de la tabla aprobacion
+ * 
+ * @author Yahir Emmanuel Romo Palomino
+ * @version 1.0
+ */
+const Aprobacion = sequelize.define('Aprobacion', {
+  UID_cuenta: {
+    type: DataTypes.STRING(128),
+    primaryKey: true,
+    references: {
+      model: Cuenta,
+      key: 'UID_cuenta',
+    },
+  },
+  observaciones_id: {
+    type: DataTypes.INTEGER,
+    primaryKey: true,
+    references: {
+      model: Observacion,
+      key: 'id',
+    },
+  },
+}, {
+  tableName: 'aprobaciones',
+  timestamps: false,
+});
+
+// Definir relaciones
+Planta.hasMany(Observacion, { foreignKey: 'plantas_idPlantas' });
+Observacion.belongsTo(Planta, { foreignKey: 'plantas_idPlantas' });
+
+Observacion.belongsToMany(Imagen, { through: ObservacionImagen, foreignKey: 'observaciones_id' });
+Imagen.belongsToMany(Observacion, { through: ObservacionImagen, foreignKey: 'imagenes_id' });
+
+Cuenta.belongsTo(Imagen, { foreignKey: 'id_imagen_perfil' });
+Aprobacion.belongsTo(Cuenta, { foreignKey: 'UID_cuenta' });
+Aprobacion.belongsTo(Observacion, { foreignKey: 'observaciones_id' });
+
+/**
+ * Sincronizacion con la base de datos
+ * 
+ * @author Yahir Emmanuel Romo Palomino
+ * @version 1.0
+ * @description Sincroniza las tablas creadas anteriormente a la base de datos
+ */
+sequelize.sync({ force: true }).then(() => {
+  console.log('Tablas creadas!');
+}).catch(error => {
+  console.error('Error creando las tablas: ', error);
+});
