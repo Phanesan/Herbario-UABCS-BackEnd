@@ -7,6 +7,8 @@ const { uploadFile,getFiles,getFile } = require('../AWS/S3Client.js');
  * 
  * @author Yahir Emmanuel Romo Palomino
  * @version 1.0
+ * @description esta ruta permite enviar uno o mas archivos al bucket, el nombre del campo debe estar nombrado
+ * como "img"
  */
 router.post('/', async (req, res) => {
     const file = req.files.img

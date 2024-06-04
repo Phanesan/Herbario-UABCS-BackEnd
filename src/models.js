@@ -259,8 +259,12 @@ Aprobacion.belongsTo(Observacion, { foreignKey: 'observaciones_id' });
  * @version 1.0
  * @description Sincroniza las tablas creadas anteriormente a la base de datos
  */
-sequelize.sync({ force: true }).then(() => {
+sequelize.sync({ force: false }).then(() => {
   console.log('Tablas creadas!');
 }).catch(error => {
   console.error('Error creando las tablas: ', error);
 });
+
+module.exports = {
+  Planta
+}

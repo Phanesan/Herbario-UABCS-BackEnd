@@ -59,6 +59,11 @@ async function getFiles() {
     return response.Contents;
 }
 
+/**
+ * Obtener el archivo del bucket
+ * @param {*} AWS_path enlace del bucket, se obtiene de la base de datos
+ * @returns respuesta de la promesa que se envia al bucket
+ */
 async function getFile(AWS_path) {
     const path = replaceHyphensWithSlashes(AWS_path);
     const command = new GetObjectCommand({
