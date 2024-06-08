@@ -15,7 +15,7 @@ router.post('/', async (req, res) => {
     await Planta.create(body).then(data => {
         res.status(200).json({status:"ok",message:"Planta cargada a la base de datos"});
     }).catch(err => {
-        res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",SQL_Status:err.errors[0].message})
+        res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err})
     })
 });
 
@@ -80,13 +80,17 @@ router.get('/', async (req, res) => {
 router.put('/', async (req, res) => {
     const body = req.body;
 
+    if(Object.keys(body).length === 0) {
+        res.status(400).json({status:"failed",message:"La petición no contiene información en el body"});
+    }
+
     await Planta.update(body,{
         where: {
             id: body.id
         }
     }).then(data => {
         if(data === 0) {
-            res.status(200).json({status:"ok",message:"No se registraron cambios o el campo ID no existe"})
+            res.status(200).json({status:"ok",message:"No se registraron cambios o la información es erronea"})
         } else {
             res.status(200).json({status:"ok",message:"La información de la planta se modifico correctamente"});
         }

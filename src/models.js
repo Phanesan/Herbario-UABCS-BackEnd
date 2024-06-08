@@ -18,44 +18,44 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, pr
  * @author Yahir Emmanuel Romo Palomino
  * @version 1.0
  */
-const Planta = sequelize.define('Planta', {
+const Plantas = sequelize.define('Plantas', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true,
+    primaryKey: true
   },
   nombre_cientifico: {
     type: DataTypes.STRING(100),
     unique: true,
-    allowNull: false,
+    allowNull: false
   },
   nombre_comun: {
     type: DataTypes.STRING(100),
-    allowNull: false,
+    allowNull: false
   },
   familia: {
     type: DataTypes.STRING(50),
-    allowNull: false,
+    allowNull: false
   },
   forma_biologica: {
     type: DataTypes.STRING(50),
-    allowNull: false,
+    allowNull: false
   },
   tipo_vegetacion: {
     type: DataTypes.STRING(100),
-    allowNull: false,
+    allowNull: false
   },
   vulnerada: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
+    allowNull: false
   },
   informacion_adicional: {
     type: DataTypes.STRING(300),
-    allowNull: false,
-  },
+    allowNull: false
+  }
 }, {
   tableName: 'plantas',
-  timestamps: false,
+  timestamps: false
 });
 
 /**
@@ -64,51 +64,55 @@ const Planta = sequelize.define('Planta', {
  * @author Yahir Emmanuel Romo Palomino
  * @version 1.0
  */
-const Observacion = sequelize.define('Observacion', {
+const Observaciones = sequelize.define('Observaciones', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true,
+    primaryKey: true
   },
   localidad: {
     type: DataTypes.STRING(80),
-    allowNull: false,
+    allowNull: false
   },
   ubicacion: {
     type: DataTypes.STRING(80),
-    allowNull: false,
+    allowNull: false
   },
-  coordenadas: {
-    type: DataTypes.JSON,
-    allowNull: false,
+  latitud: {
+    type: DataTypes.DOUBLE,
+    allowNull: false
+  },
+  longitud: {
+    type: DataTypes.DOUBLE,
+    allowNull: false
   },
   fisiografia: {
     type: DataTypes.STRING(50),
-    allowNull: false,
+    allowNull: false
   },
   fecha_colecta: {
-    type: DataTypes.DATEONLY,
-    allowNull: false,
+    type: DataTypes.DATE,
+    allowNull: false
   },
   colector: {
     type: DataTypes.STRING(100),
-    allowNull: false,
+    allowNull: false
   },
   identificador: {
     type: DataTypes.STRING(100),
-    allowNull: false,
+    allowNull: false
   },
-  plantas_idPlantas: {
+  id_plantas: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: Planta,
-      key: 'id',
-    },
-  },
+      model: Plantas,
+      key: 'id'
+    }
+  }
 }, {
   tableName: 'observaciones',
-  timestamps: false,
+  timestamps: false
 });
 
 /**
@@ -117,19 +121,19 @@ const Observacion = sequelize.define('Observacion', {
  * @author Yahir Emmanuel Romo Palomino
  * @version 1.0
  */
-const Imagen = sequelize.define('Imagen', {
+const Imagenes = sequelize.define('Imagenes', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true,
+    primaryKey: true
   },
   enlace_imagen: {
     type: DataTypes.STRING(255),
-    allowNull: false,
-  },
+    allowNull: false
+  }
 }, {
   tableName: 'imagenes',
-  timestamps: false,
+  timestamps: false
 });
 
 /**
@@ -142,23 +146,23 @@ const Log = sequelize.define('Log', {
   id: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true,
+    primaryKey: true
   },
   fecha: {
     type: DataTypes.DATE,
-    allowNull: false,
+    allowNull: false
   },
   tipoEvento: {
     type: DataTypes.ENUM('INSERCION', 'EDICION', 'CONSULTA', 'ELIMINACION'),
-    allowNull: false,
+    allowNull: false
   },
   descripcion: {
     type: DataTypes.STRING(60),
-    allowNull: false,
-  },
+    allowNull: false
+  }
 }, {
   tableName: 'log',
-  timestamps: false,
+  timestamps: false
 });
 
 /**
@@ -167,26 +171,26 @@ const Log = sequelize.define('Log', {
  * @author Yahir Emmanuel Romo Palomino
  * @version 1.0
  */
-const ObservacionImagen = sequelize.define('ObservacionImagen', {
+const ObservacionImagenes = sequelize.define('ObservacionImagenes', {
   observaciones_id: {
     type: DataTypes.INTEGER,
-    primaryKey: true,
+    allowNull: false,
     references: {
-      model: Observacion,
-      key: 'id',
-    },
+      model: Observaciones,
+      key: 'id'
+    }
   },
   imagenes_id: {
     type: DataTypes.INTEGER,
-    primaryKey: true,
+    allowNull: false,
     references: {
-      model: Imagen,
-      key: 'id',
-    },
-  },
+      model: Imagenes,
+      key: 'id'
+    }
+  }
 }, {
   tableName: 'observacionImagenes',
-  timestamps: false,
+  timestamps: false
 });
 
 /**
@@ -195,22 +199,26 @@ const ObservacionImagen = sequelize.define('ObservacionImagen', {
  * @author Yahir Emmanuel Romo Palomino
  * @version 1.0
  */
-const Cuenta = sequelize.define('Cuenta', {
-  UID_cuenta: {
+const Cuentas = sequelize.define('Cuentas', {
+  correo: {
     type: DataTypes.STRING(128),
-    primaryKey: true,
+    primaryKey: true
+  },
+  password: {
+    type: DataTypes.STRING(80),
+    allowNull: false
   },
   id_imagen_perfil: {
     type: DataTypes.INTEGER,
     allowNull: false,
     references: {
-      model: Imagen,
-      key: 'id',
-    },
-  },
+      model: Imagenes,
+      key: 'id'
+    }
+  }
 }, {
   tableName: 'cuentas',
-  timestamps: false,
+  timestamps: false
 });
 
 /**
@@ -219,38 +227,35 @@ const Cuenta = sequelize.define('Cuenta', {
  * @author Yahir Emmanuel Romo Palomino
  * @version 1.0
  */
-const Aprobacion = sequelize.define('Aprobacion', {
-  UID_cuenta: {
+const Aprobaciones = sequelize.define('Aprobaciones', {
+  correo_cuenta: {
     type: DataTypes.STRING(128),
-    primaryKey: true,
+    allowNull: false,
     references: {
-      model: Cuenta,
-      key: 'UID_cuenta',
-    },
+      model: Cuentas,
+      key: 'correo'
+    }
   },
   observaciones_id: {
     type: DataTypes.INTEGER,
-    primaryKey: true,
+    allowNull: false,
     references: {
-      model: Observacion,
-      key: 'id',
-    },
-  },
+      model: Observaciones,
+      key: 'id'
+    }
+  }
 }, {
   tableName: 'aprobaciones',
-  timestamps: false,
+  timestamps: false
 });
 
 // Definir relaciones
-Planta.hasMany(Observacion, { foreignKey: 'plantas_idPlantas' });
-Observacion.belongsTo(Planta, { foreignKey: 'plantas_idPlantas' });
-
-Observacion.belongsToMany(Imagen, { through: ObservacionImagen, foreignKey: 'observaciones_id' });
-Imagen.belongsToMany(Observacion, { through: ObservacionImagen, foreignKey: 'imagenes_id' });
-
-Cuenta.belongsTo(Imagen, { foreignKey: 'id_imagen_perfil' });
-Aprobacion.belongsTo(Cuenta, { foreignKey: 'UID_cuenta' });
-Aprobacion.belongsTo(Observacion, { foreignKey: 'observaciones_id' });
+Observaciones.belongsTo(Plantas, { foreignKey: 'id_plantas' });
+ObservacionImagenes.belongsTo(Observaciones, { foreignKey: 'observaciones_id' });
+ObservacionImagenes.belongsTo(Imagenes, { foreignKey: 'imagenes_id' });
+Cuentas.belongsTo(Imagenes, { foreignKey: 'id_imagen_perfil' });
+Aprobaciones.belongsTo(Cuentas, { foreignKey: 'correo_cuenta' });
+Aprobaciones.belongsTo(Observaciones, { foreignKey: 'observaciones_id' });
 
 /**
  * Sincronizacion con la base de datos
@@ -266,5 +271,6 @@ sequelize.sync({ force: false }).then(() => {
 });
 
 module.exports = {
-  Planta
+  Planta,
+  Observacion
 }
