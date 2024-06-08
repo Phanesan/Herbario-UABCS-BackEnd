@@ -1,12 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { Observacion } = require('../models.js')
+const { Observaciones } = require('../models.js')
 const { Op } = require('sequelize');
 
 
 router.post('/', async (req, res) => {
     const body = req.body;
-    await Observacion.create(body).then(data => {
+    await Observaciones.create(body).then(data => {
         res.status(200).json({status:"ok",message:"Observación cargada a la base de datos"});
     }).catch(err => {
         res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err})
@@ -17,7 +17,7 @@ router.post('/', async (req, res) => {
 router.get('/:id', async (req, res) => {
     const id = req.params.id;
 
-    await Observacion.findAll({
+    await Observaciones.findAll({
         where: {
             id: id
         }
@@ -32,7 +32,7 @@ router.get('/:id', async (req, res) => {
 router.get('/', async (req, res) => {
     const body = req.body;
     console.log(body);
-    await Observacion.findAll({
+    await Observaciones.findAll({
         where: {
             latitud: {
               [Op.between]: [body.south, body.north]
@@ -57,7 +57,7 @@ router.put('/', async (req, res) => {
         return;
     }
 
-    await Observacion.update(body,{
+    await Observaciones.update(body,{
         where: {
             id: body.id
         }
@@ -76,7 +76,7 @@ router.put('/', async (req, res) => {
 router.delete('/:id', async (req, res) => {
     const id = req.params.id;
 
-    await Observacion.destroy({
+    await Observaciones.destroy({
         where: {
             id: id
         }

@@ -271,6 +271,6 @@ sequelize.sync({ force: false }).then(() => {
 });
 
 module.exports = {
-  Planta,
-  Observacion
+  Plantas,
+  Observaciones
 }
