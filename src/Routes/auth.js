@@ -19,18 +19,12 @@ const generateToken = (account) => {
  * - apellidos
  * - correo
  * - password
- * - repeat_password
  */
 router.post('/register', async (req, res) => {
     const body = req.body;
 
     if(!isEmail(body.correo)) {
         res.status(400).json({status:"failed",message:"El correo no es valido"})
-        return;
-    }
-
-    if(body.password != body.repeat_password) {
-        res.status(400).json({status:"failed",message:"La contraseña no es la misma"})
         return;
     }
 
@@ -49,7 +43,7 @@ router.post('/register', async (req, res) => {
         nombre: body.nombre,
         apellidos: body.apellidos
     }).then(data => {
-        res.status(200).json({status:"ok",message:"Usuario registrado correctamente",data});
+        res.status(200).json({status:"ok",message:"Usuario registrado correctamente"});
     }).catch(err => {
         res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err})
     });
@@ -87,7 +81,7 @@ router.post('/login', async (req, res) => {
     if(await bcrypt.compare(body.password,account.dataValues.password)) {
         const token = generateToken(account);
 
-        res.status(200).json({status:"ok",message:"Autenticación validada",token:token});
+        res.status(200).json({status:"ok",message:"Autenticación validada",token:`herbario ${token}`});
     } else {
         res.status(400).json({status:"failed",message:"Autenticación fallida, revise los datos."});
     }

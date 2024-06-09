@@ -1,10 +1,11 @@
 const express = require('express');
 const router = express.Router();
+const authRoute = require('./middleware.js');
 const { Observaciones } = require('../models.js')
 const { Op } = require('sequelize');
 
 
-router.post('/', async (req, res) => {
+router.post('/', authRoute, async (req, res) => {
     const body = req.body;
     await Observaciones.create(body).then(data => {
         res.status(200).json({status:"ok",message:"Observación cargada a la base de datos"});
@@ -31,7 +32,7 @@ router.get('/:id', async (req, res) => {
 
 router.get('/', async (req, res) => {
     const body = req.body;
-    console.log(body);
+
     await Observaciones.findAll({
         where: {
             latitud: {
@@ -49,7 +50,7 @@ router.get('/', async (req, res) => {
 });
 
 
-router.put('/', async (req, res) => {
+router.put('/', authRoute, async (req, res) => {
     const body = req.body;
 
     if(Object.keys(body).length === 0) {
@@ -73,7 +74,7 @@ router.put('/', async (req, res) => {
 });
 
 
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authRoute, async (req, res) => {
     const id = req.params.id;
 
     await Observaciones.destroy({
