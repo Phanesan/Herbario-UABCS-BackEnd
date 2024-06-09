@@ -202,23 +202,31 @@ const ObservacionImagenes = sequelize.define('ObservacionImagenes', {
 const Cuentas = sequelize.define('Cuentas', {
   correo: {
     type: DataTypes.STRING(128),
-    primaryKey: true
+    primaryKey: true,
+    allowNull: false
   },
   password: {
     type: DataTypes.STRING(80),
     allowNull: false
   },
+  nombre: {
+    type: DataTypes.STRING(45),
+    allowNull: false
+  },
+  apellidos: {
+    type: DataTypes.STRING(45),
+    allowNull: false
+  },
   id_imagen_perfil: {
     type: DataTypes.INTEGER,
-    allowNull: false,
     references: {
-      model: Imagenes,
+      model: 'Imagenes',
       key: 'id'
     }
   }
 }, {
   tableName: 'cuentas',
-  timestamps: false
+  timestamps: false,
 });
 
 /**
@@ -272,5 +280,6 @@ sequelize.sync({ force: false }).then(() => {
 
 module.exports = {
   Plantas,
-  Observaciones
+  Observaciones,
+  Cuentas
 }

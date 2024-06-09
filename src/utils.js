@@ -7,6 +7,24 @@ function replaceHyphensWithSlashes(str) {
     return str.replace(/-/g, '/');
 }
 
+const isEmail = (email) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(email);
+};
+
+const isPassword = (password) => {
+    return password.length > 6;
+};
+
+const isName = (name) => {
+    // Expresión regular para verificar nombres de personas
+    const nameRegex = /^[a-zA-ZáéíóúÁÉÍÓÚñÑ' -]+$/;
+    return nameRegex.test(name);
+};
+
 module.exports = {
-    replaceHyphensWithSlashes
+    replaceHyphensWithSlashes,
+    isEmail,
+    isPassword,
+    isName
 }

@@ -11,6 +11,7 @@ const DATABASE = require('./models.js');
 const fileRouter = require('./Routes/files.js');
 const plantaRouter = require('./Routes/planta.js');
 const observacionRouter = require('./Routes/observacion.js');
+const authRouter = require('./Routes/auth.js');
 
 // Aqui se agregan los archivos que necesiten inicializarse
 require('./cleanTemporalFolder.js')
@@ -31,6 +32,7 @@ app.use(expressFileUpload({
 app.use('/files', fileRouter);
 app.use('/planta', plantaRouter);
 app.use('/observacion', observacionRouter);
+app.use('/auth', authRouter);
 
 // Aqui se agregan las solicitudes principales
 app.get('/', (req, res) => {
