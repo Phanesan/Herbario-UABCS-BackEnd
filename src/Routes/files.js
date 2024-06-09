@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const authRoute = require('./middleware.js');
 const { uploadFile,getFiles,getFile } = require('../AWS/S3Client.js');
 
 /**
@@ -10,7 +11,7 @@ const { uploadFile,getFiles,getFile } = require('../AWS/S3Client.js');
  * @description esta ruta permite enviar uno o mas archivos al bucket, el nombre del campo debe estar nombrado
  * como "img"
  */
-router.post('/', async (req, res) => {
+router.post('/', authRoute, async (req, res) => {
     const file = req.files.img
     if(!file || file.length === 0) {
         res.status(400).send("No se enviaron archivos");

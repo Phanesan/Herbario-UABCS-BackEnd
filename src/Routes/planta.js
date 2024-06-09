@@ -1,5 +1,6 @@
 const express = require('express');
 const router = express.Router();
+const authRoute = require('./middleware.js');
 const { Plantas } = require('../models.js')
 const { Op } = require('sequelize');
 
@@ -10,8 +11,13 @@ const { Op } = require('sequelize');
  * @version 1.0
  * @description peticion POST para registrar una planta, esta queda guardada en la base de datos
  */
-router.post('/', async (req, res) => {
+router.post('/', authRoute, async (req, res) => {
     const body = req.body;
+
+    if(Object.keys(body).length === 0) {
+        res.status(400).json({status:"failed",message:"La petición no contiene información en el body"});
+    }
+
     await Plantas.create(body).then(data => {
         res.status(200).json({status:"ok",message:"Planta cargada a la base de datos"});
     }).catch(err => {
@@ -77,7 +83,7 @@ router.get('/', async (req, res) => {
  * @description peticion PUT para editar una planta a partir del campo 'id' que se debera enviar en el body de la petición. La 'id'
  * es la id de la columna de la planta en la base de datos.
  */
-router.put('/', async (req, res) => {
+router.put('/', authRoute, async (req, res) => {
     const body = req.body;
 
     if(Object.keys(body).length === 0) {
@@ -106,7 +112,7 @@ router.put('/', async (req, res) => {
  * @version 1.0
  * @description peticion DELETE para eliminar una planta mediante el parametro id que se coloca en el enlace
  */
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', authRoute, async (req, res) => {
     const id = req.params.id;
 
     await Plantas.destroy({

@@ -31,8 +31,8 @@ app.use(expressFileUpload({
 
 // Aqui se agregan los Routers
 app.use('/files', authRoute, fileRouter);
-app.use('/planta', authRoute, plantaRouter);
-app.use('/observacion', authRoute, observacionRouter);
+app.use('/planta', plantaRouter);
+app.use('/observacion', observacionRouter);
 app.use('/auth', authRouter);
 
 // Aqui se agregan las solicitudes principales

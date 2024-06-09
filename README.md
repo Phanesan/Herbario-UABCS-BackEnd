@@ -1,11 +1,8 @@
 # HerbarioAPI
- 
-Nombre de Integrantes:
-<ol>Yahir Emmanuel Romo Palomino</ol>
-<ol>Ruben Aleksey Unzon Melchor</ol>
-<ol>Ruben Abdel Junco Jauregui</ol>
 
-<hr>
+API para las solicitudes de la plataforma web **Herbario UABCS**
 
-Descripcion:
-<ol>API enfocada a las peticiones HTTP del proyecto Herbario UABCS</ol>
+## Nombre de Integrantes:
+* Yahir Emmanuel Romo Palomino
+* Ruben Aleksey Unzon Melchor
+* Ruben Abdel Junco Jauregui
