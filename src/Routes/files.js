@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const authRoute = require('./middleware.js');
+const authRoute = require('../middleware.js');
 const { uploadFile,getFiles,getFile } = require('../AWS/S3Client.js');
 
 /**

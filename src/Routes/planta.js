@@ -1,6 +1,6 @@
 const express = require('express');
 const router = express.Router();
-const authRoute = require('./middleware.js');
+const authRoute = require('../middleware.js');
 const { Plantas } = require('../models.js')
 const { Op } = require('sequelize');
 

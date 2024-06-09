@@ -21,13 +21,14 @@ const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, pr
 const Plantas = sequelize.define('Plantas', {
   id: {
     type: DataTypes.INTEGER,
+    allowNull: false,
     autoIncrement: true,
     primaryKey: true
   },
   nombre_cientifico: {
     type: DataTypes.STRING(100),
-    unique: true,
-    allowNull: false
+    allowNull: false,
+    unique: true
   },
   nombre_comun: {
     type: DataTypes.STRING(100),
@@ -54,8 +55,8 @@ const Plantas = sequelize.define('Plantas', {
     allowNull: false
   }
 }, {
-  tableName: 'plantas',
-  timestamps: false
+  timestamps: false,
+  tableName: 'plantas'
 });
 
 /**
@@ -67,6 +68,7 @@ const Plantas = sequelize.define('Plantas', {
 const Observaciones = sequelize.define('Observaciones', {
   id: {
     type: DataTypes.INTEGER,
+    allowNull: false,
     autoIncrement: true,
     primaryKey: true
   },
@@ -109,31 +111,13 @@ const Observaciones = sequelize.define('Observaciones', {
       model: Plantas,
       key: 'id'
     }
-  }
-}, {
-  tableName: 'observaciones',
-  timestamps: false
-});
-
-/**
- * Definicion de la tabla imagen
- * 
- * @author Yahir Emmanuel Romo Palomino
- * @version 1.0
- */
-const Imagenes = sequelize.define('Imagenes', {
-  id: {
-    type: DataTypes.INTEGER,
-    autoIncrement: true,
-    primaryKey: true
   },
-  enlace_imagen: {
-    type: DataTypes.STRING(255),
-    allowNull: false
+  imagenes: {
+    type: DataTypes.JSON
   }
 }, {
-  tableName: 'imagenes',
-  timestamps: false
+  timestamps: false,
+  tableName: 'observaciones'
 });
 
 /**
@@ -145,6 +129,7 @@ const Imagenes = sequelize.define('Imagenes', {
 const Log = sequelize.define('Log', {
   id: {
     type: DataTypes.INTEGER,
+    allowNull: false,
     autoIncrement: true,
     primaryKey: true
   },
@@ -161,36 +146,8 @@ const Log = sequelize.define('Log', {
     allowNull: false
   }
 }, {
-  tableName: 'log',
-  timestamps: false
-});
-
-/**
- * Definicion de la tabla ObservacionImagen
- * 
- * @author Yahir Emmanuel Romo Palomino
- * @version 1.0
- */
-const ObservacionImagenes = sequelize.define('ObservacionImagenes', {
-  observaciones_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: Observaciones,
-      key: 'id'
-    }
-  },
-  imagenes_id: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-    references: {
-      model: Imagenes,
-      key: 'id'
-    }
-  }
-}, {
-  tableName: 'observacionImagenes',
-  timestamps: false
+  timestamps: false,
+  tableName: 'log'
 });
 
 /**
@@ -201,12 +158,12 @@ const ObservacionImagenes = sequelize.define('ObservacionImagenes', {
  */
 const Cuentas = sequelize.define('Cuentas', {
   correo: {
-    type: DataTypes.STRING(128),
-    primaryKey: true,
-    allowNull: false
+    type: DataTypes.STRING(80),
+    allowNull: false,
+    primaryKey: true
   },
   password: {
-    type: DataTypes.STRING(80),
+    type: DataTypes.STRING(128),
     allowNull: false
   },
   nombre: {
@@ -217,16 +174,12 @@ const Cuentas = sequelize.define('Cuentas', {
     type: DataTypes.STRING(45),
     allowNull: false
   },
-  id_imagen_perfil: {
-    type: DataTypes.INTEGER,
-    references: {
-      model: 'Imagenes',
-      key: 'id'
-    }
+  imagen: {
+    type: DataTypes.STRING(100)
   }
 }, {
-  tableName: 'cuentas',
   timestamps: false,
+  tableName: 'cuentas'
 });
 
 /**
@@ -239,6 +192,7 @@ const Aprobaciones = sequelize.define('Aprobaciones', {
   correo_cuenta: {
     type: DataTypes.STRING(128),
     allowNull: false,
+    primaryKey: true,
     references: {
       model: Cuentas,
       key: 'correo'
@@ -247,21 +201,20 @@ const Aprobaciones = sequelize.define('Aprobaciones', {
   observaciones_id: {
     type: DataTypes.INTEGER,
     allowNull: false,
+    primaryKey: true,
     references: {
       model: Observaciones,
       key: 'id'
     }
   }
 }, {
-  tableName: 'aprobaciones',
-  timestamps: false
+  timestamps: false,
+  tableName: 'aprobaciones'
 });
 
 // Definir relaciones
+Plantas.hasMany(Observaciones, { foreignKey: 'id_plantas' });
 Observaciones.belongsTo(Plantas, { foreignKey: 'id_plantas' });
-ObservacionImagenes.belongsTo(Observaciones, { foreignKey: 'observaciones_id' });
-ObservacionImagenes.belongsTo(Imagenes, { foreignKey: 'imagenes_id' });
-Cuentas.belongsTo(Imagenes, { foreignKey: 'id_imagen_perfil' });
 Aprobaciones.belongsTo(Cuentas, { foreignKey: 'correo_cuenta' });
 Aprobaciones.belongsTo(Observaciones, { foreignKey: 'observaciones_id' });
 
