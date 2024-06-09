@@ -12,6 +12,7 @@ const fileRouter = require('./Routes/files.js');
 const plantaRouter = require('./Routes/planta.js');
 const observacionRouter = require('./Routes/observacion.js');
 const authRouter = require('./Routes/auth.js');
+const authRoute = require('./middleware.js');
 
 // Aqui se agregan los archivos que necesiten inicializarse
 require('./cleanTemporalFolder.js')
@@ -29,9 +30,9 @@ app.use(expressFileUpload({
 }))
 
 // Aqui se agregan los Routers
-app.use('/files', fileRouter);
-app.use('/planta', plantaRouter);
-app.use('/observacion', observacionRouter);
+app.use('/files', authRoute, fileRouter);
+app.use('/planta', authRoute, plantaRouter);
+app.use('/observacion', authRoute, observacionRouter);
 app.use('/auth', authRouter);
 
 // Aqui se agregan las solicitudes principales

@@ -87,7 +87,7 @@ router.post('/login', async (req, res) => {
     if(await bcrypt.compare(body.password,account.dataValues.password)) {
         const token = generateToken(account);
 
-        res.status(200).json({status:"ok",message:"Autenticación validada",token:token});
+        res.status(200).json({status:"ok",message:"Autenticación validada",token:`herbario ${token}`});
     } else {
         res.status(400).json({status:"failed",message:"Autenticación fallida, revise los datos."});
     }
