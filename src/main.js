@@ -5,6 +5,7 @@ const morgan = require('morgan');
 const bodyParser = require('body-parser');
 const expressFileUpload = require('express-fileupload');
 const path = require('path');
+const cors = require('cors');
 
 // Aqui se agregan los accesos a otros archivos
 const DATABASE = require('./models.js');
@@ -22,6 +23,7 @@ require('dotenv').config();
 const port = process.env.PORT || 3000;
 
 // Aqui se agregan los Middlewares
+app.use(cors());
 app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(expressFileUpload({
