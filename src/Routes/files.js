@@ -12,7 +12,13 @@ const { uploadFile,getFiles,getFile } = require('../AWS/S3Client.js');
  * como "img"
  */
 router.post('/', authRoute, async (req, res) => {
+    if(!req.files) {
+        res.status(400).send({status:"failed",message:"No se enviaron archivos"});
+        return;
+    }
+
     const file = req.files.img
+    
     if(!file || file.length === 0) {
         res.status(400).send("No se enviaron archivos");
         return;

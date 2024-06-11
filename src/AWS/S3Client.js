@@ -1,7 +1,7 @@
-const { PutObjectCommand, S3Client, ListObjectsCommand, GetObjectCommand } = require("@aws-sdk/client-s3");
+const { PutObjectCommand, S3Client, ListObjectsCommand, GetObjectCommand, DeleteObjectCommand } = require("@aws-sdk/client-s3");
 const fs = require('fs');
 const cuid = require('@paralleldrive/cuid2');
-const {replaceHyphensWithSlashes} = require('../utils.js');
+const {replaceHyphensWithSlashes, replaceSlashesWithHyphens} = require('../utils.js');
 
 require('dotenv').config();
 
@@ -30,7 +30,6 @@ const client = new S3Client({
 async function uploadFile(file) {
     const stream = fs.createReadStream(file.tempFilePath);
     const fileFormat = file.name.split('.').pop();
-    console.log(fileFormat)
     const fileName = cuid.createId();
     const uploadParams = {
         Bucket: process.env.AWS_BUCKET_NAME,
@@ -40,7 +39,7 @@ async function uploadFile(file) {
 
     const command = new PutObjectCommand(uploadParams);
     const response = await client.send(command);
-    return uploadParams.Key;
+    return replaceSlashesWithHyphens(uploadParams.Key);
 }
 
 /**
@@ -66,6 +65,7 @@ async function getFiles() {
  */
 async function getFile(AWS_path) {
     const path = replaceHyphensWithSlashes(AWS_path);
+    console.log("AAAAAAAAAAAAAAAAAAAA:",path);
     const command = new GetObjectCommand({
         Bucket: process.env.AWS_BUCKET_NAME,
         Key: path
@@ -74,8 +74,20 @@ async function getFile(AWS_path) {
     return await client.send(command);
 }
 
+// TODO: Hacer la funcion para eliminar un archivo por medio de su path en el bucket
+async function removeFile(AWS_path) {
+    const path = replaceHyphensWithSlashes(AWS_path);
+    const command = new DeleteObjectCommand({
+        Bucket: process.env.AWS_BUCKET_NAME,
+        Key: path
+    });
+
+    return await client.send(command);
+}
+
 module.exports = {
     uploadFile,
     getFiles,
-    getFile
+    getFile,
+    removeFile
 }

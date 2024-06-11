@@ -32,7 +32,7 @@ app.use(expressFileUpload({
 }))
 
 // Aqui se agregan los Routers
-app.use('/files', authRoute, fileRouter);
+app.use('/files', fileRouter);
 app.use('/planta', plantaRouter);
 app.use('/observacion', observacionRouter);
 app.use('/auth', authRouter);
