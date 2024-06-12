@@ -176,6 +176,11 @@ const Cuentas = sequelize.define('Cuentas', {
   },
   imagen: {
     type: DataTypes.STRING(100)
+  },
+  rol: {
+    type: DataTypes.INTEGER,
+    allowNull: false,
+    defaultValue: 0
   }
 }, {
   timestamps: false,
