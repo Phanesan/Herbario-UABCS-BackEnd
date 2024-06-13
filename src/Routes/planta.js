@@ -56,32 +56,34 @@ router.get('/:planta', async (req, res) => {
             res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err});
         })
     } else {
-        await Plantas.findAll({
-            where: {
-            [Op.or]: [
-                { nombre_cientifico: { [Op.like]: `%${planta}%` } },
-                { nombre_comun: { [Op.like]: `%${planta}%` } }
-            ]
-            }
-        }).then(data => {
-            try {
-                console.log("AAAAAAAAAAAAAAABDBYWUSAIHDEYUSAHD:",data[0].dataValues.id)
-                const observacion = Observaciones.findAll({
-                    where: {
-                        id_plantas: parseInt(data[0].dataValues.id, 10)
-                    }
-                }).then(data => {
-                    return data;
-                }).catch(err => {
-                    res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err});
-                })
-                res.status(200).json({status:"ok",message:data,relations:observacion});
-            } catch(err) {
+        
+        try {
+            const plantas = await Plantas.findAll({
+                where: {
+                [Op.or]: [
+                    { nombre_cientifico: { [Op.like]: `%${planta}%` } },
+                    { nombre_comun: { [Op.like]: `%${planta}%` } }
+                ]
+                }
+            });
 
+            try {
+                console.log("AAAAAAAAAAAAAAABDBYWUSAIHDEYUSAHD:",plantas[0].dataValues.id)
+                const observacion = await Observaciones.findAll({
+                    where: {
+                        id_plantas: plantas[0].dataValues.id
+                    }
+                })
+                res.status(200).json({status:"ok",message:plantas,relations:observacion});
+            } catch(err) {
+                res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err});
+                return err;
             }
-        }).catch(err => {
+        
+        } catch(err) {
             res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err});
-        })
+        }
+    
     }
 
 });
