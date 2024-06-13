@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authRoute = require('../middleware.js');
-const { Plantas } = require('../models.js')
+const { Plantas, Observaciones } = require('../models.js')
 const { Op } = require('sequelize');
 
 /**
@@ -50,7 +50,8 @@ router.get('/:planta', async (req, res) => {
             limit: limit,
             offset: offset
         }).then(data => {
-            res.status(200).json({status:"ok",message:data});
+            console.log("AAAAAAAAAAAAAAABDBYWUSAIHDEYUSAHD:",data)
+            res.status(200).json({status:"ok",message:data,relations:"TEST"});
         }).catch(err => {
             res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err});
         })
@@ -63,7 +64,21 @@ router.get('/:planta', async (req, res) => {
             ]
             }
         }).then(data => {
-            res.status(200).json({status:"ok",message:data});
+            try {
+                console.log("AAAAAAAAAAAAAAABDBYWUSAIHDEYUSAHD:",data[0].dataValues.id)
+                const observacion = Observaciones.findAll({
+                    where: {
+                        id_plantas: parseInt(data[0].dataValues.id, 10)
+                    }
+                }).then(data => {
+                    return data;
+                }).catch(err => {
+                    res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err});
+                })
+                res.status(200).json({status:"ok",message:data,relations:observacion});
+            } catch(err) {
+
+            }
         }).catch(err => {
             res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err});
         })
