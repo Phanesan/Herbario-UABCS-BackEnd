@@ -84,7 +84,6 @@ router.get('/', async (req, res) => {
     if(req.query.limit || req.query.offset) {
         const limit = parseInt(req.query.limit,10) || 20;
         const offset = parseInt(req.query.offset,10) || 0;
-
         await Plantas.findAll({limit:limit,offset:offset}).then(data => {
             res.status(200).json({status:"ok",message:data});
         }).catch(err => {
