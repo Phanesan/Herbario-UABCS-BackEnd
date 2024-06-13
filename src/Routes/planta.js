@@ -40,7 +40,6 @@ router.get('/:planta', async (req, res) => {
     if(req.query.limit || req.query.offset) {
         const limit = parseInt(req.query.limit,10);
         const offset = parseInt(req.query.offset,10); 
-        console.log("caso 1")
         await Plantas.findAll({
             where: {
             [Op.or]: [
@@ -56,7 +55,6 @@ router.get('/:planta', async (req, res) => {
             res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err});
         })
     } else {
-        console.log("caso 2")
         await Plantas.findAll({
             where: {
             [Op.or]: [
@@ -83,14 +81,23 @@ router.get('/:planta', async (req, res) => {
  * con la informacion enlistada de las plantas
  */
 router.get('/', async (req, res) => {
-    const limit = parseInt(req.query.limit,10) || 20;
-    const offset = parseInt(req.query.offset,10) || 0; 
+    if(req.query.limit || req.query.offset) {
+        const limit = parseInt(req.query.limit,10) || 20;
+        const offset = parseInt(req.query.offset,10) || 0;
 
-    await Plantas.findAll({limit:limit,offset:offset}).then(data => {
-        res.status(200).json({status:"ok",message:data});
-    }).catch(err => {
-        res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err});
-    })
+        await Plantas.findAll({limit:limit,offset:offset}).then(data => {
+            res.status(200).json({status:"ok",message:data});
+        }).catch(err => {
+            res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err});
+        })
+    } else {
+        await Plantas.findAll().then(data => {
+            res.status(200).json({status:"ok",message:data});
+        }).catch(err => {
+            res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err});
+        })
+    }
+
 });
 
 /**
