@@ -35,16 +35,7 @@ router.get('/:id', async (req, res) => {
 router.get('/', async (req, res) => {
     const body = req.body;
 
-    await Observaciones.findAll({
-        where: {
-            latitud: {
-              [Op.between]: [body.south, body.north]
-            },
-            longitud: {
-              [Op.between]: [body.east, body.west]
-            }
-        }
-    }).then(data => {
+    await Observaciones.findAll().then(data => {
         res.status(200).json({status:"ok",message:data});
     }).catch(err => {
         res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err});
