@@ -36,23 +36,41 @@ router.post('/', authRoute, async (req, res) => {
  */
 router.get('/:planta', async (req, res) => {
     const planta = req.params.planta;
-    const limit = parseInt(req.query.limit,10) || 20;
-    const offset = parseInt(req.query.offset,10) || 0; 
 
-    await Plantas.findAll({
-        where: {
-          [Op.or]: [
-            { nombre_cientifico: { [Op.like]: `%${planta}%` } },
-            { nombre_comun: { [Op.like]: `%${planta}%` } }
-          ]
-        },
-        limit: limit,
-        offset: offset
-    }).then(data => {
-        res.status(200).json({status:"ok",message:data});
-    }).catch(err => {
-        res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err});
-    })
+    if(req.query.limit || req.query.offset) {
+        const limit = parseInt(req.query.limit,10);
+        const offset = parseInt(req.query.offset,10); 
+        console.log("caso 1")
+        await Plantas.findAll({
+            where: {
+            [Op.or]: [
+                { nombre_cientifico: { [Op.like]: `%${planta}%` } },
+                { nombre_comun: { [Op.like]: `%${planta}%` } }
+            ]
+            },
+            limit: limit,
+            offset: offset
+        }).then(data => {
+            res.status(200).json({status:"ok",message:data});
+        }).catch(err => {
+            res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err});
+        })
+    } else {
+        console.log("caso 2")
+        await Plantas.findAll({
+            where: {
+            [Op.or]: [
+                { nombre_cientifico: { [Op.like]: `%${planta}%` } },
+                { nombre_comun: { [Op.like]: `%${planta}%` } }
+            ]
+            }
+        }).then(data => {
+            res.status(200).json({status:"ok",message:data});
+        }).catch(err => {
+            res.status(400).json({status:"failed",message:"La API no puede procesar la solicitud",error_status:err});
+        })
+    }
+
 });
 
 /**
