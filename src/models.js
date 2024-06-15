@@ -7,8 +7,9 @@ require('dotenv').config();
  * @author Yahir Emmanuel Romo Palomino
  * @version 1.0
  */
-const sequelize = new Sequelize(process.env.MYSQLDATABASE, process.env.MYSQLUSER, process.env.MYSQLPASSWORD, {
-  host: process.env.MYSQLHOST,
+const sequelize = new Sequelize(process.env.DB_NAME, process.env.DB_USERNAME, process.env.DB_PASSWORD, {
+  host: process.env.DB_IP,
+  port: process.env.DB_PORT,
   dialect: 'mysql',
 });
 
