@@ -61,7 +61,7 @@ router.post('/login', async (req, res) => {
     const body = req.body;
     
     if(!isEmail(body.correo) || !isPassword(body.password)) {
-        res.status(400).json({status:"failed",message:"Autenticación fallida, revise los datos."});
+        res.status(400).json({status:"failed",message:"Autenticación fallida, revise los datos. 1"});
         return;
     }
 
@@ -70,12 +70,12 @@ router.post('/login', async (req, res) => {
             correo: body.correo
         }
     }).catch(err => {
-        res.status(400).json({status:"failed",message:"Autenticación fallida, revise los datos."});
+        res.status(400).json({status:"failed",message:"Autenticación fallida, revise los datos. 2"});
         return;
     })
 
     if(!account) {
-        res.status(400).json({status:"failed",message:"Autenticación fallida, revise los datos."});
+        res.status(400).json({status:"failed",message:"Autenticación fallida, revise los datos. 3"});
         return;
     }
 
@@ -84,7 +84,7 @@ router.post('/login', async (req, res) => {
 
         res.status(200).json({status:"ok",message:"Autenticación validada",token:`${token}`});
     } else {
-        res.status(400).json({status:"failed",message:"Autenticación fallida, revise los datos."});
+        res.status(400).json({status:"failed",message:"Autenticación fallida, revise los datos. 4"});
     }
 });
 
