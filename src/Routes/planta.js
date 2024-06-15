@@ -1,6 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const authRoute = require('../middleware.js');
+const authAdmin = require('../middlewareAdmin.js');
 const { Plantas, Observaciones } = require('../models.js')
 const { Op } = require('sequelize');
 
@@ -11,7 +12,7 @@ const { Op } = require('sequelize');
  * @version 1.0
  * @description peticion POST para registrar una planta, esta queda guardada en la base de datos
  */
-router.post('/', authRoute, async (req, res) => {
+router.post('/', authAdmin, async (req, res) => {
     const body = req.body;
 
     if(Object.keys(body).length === 0) {
@@ -124,7 +125,7 @@ router.get('/', async (req, res) => {
  * @description peticion PUT para editar una planta a partir del campo 'id' que se debera enviar en el body de la petición. La 'id'
  * es la id de la columna de la planta en la base de datos.
  */
-router.put('/', authRoute, async (req, res) => {
+router.put('/', authAdmin, async (req, res) => {
     const body = req.body;
 
     if(Object.keys(body).length === 0) {
@@ -153,7 +154,7 @@ router.put('/', authRoute, async (req, res) => {
  * @version 1.0
  * @description peticion DELETE para eliminar una planta mediante el parametro id que se coloca en el enlace
  */
-router.delete('/:id', authRoute, async (req, res) => {
+router.delete('/:id', authAdmin, async (req, res) => {
     const id = req.params.id;
 
     await Plantas.destroy({
