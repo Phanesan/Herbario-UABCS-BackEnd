@@ -1,12 +1,13 @@
 const express = require('express');
 const router = express.Router();
 const authRoute = require('../middleware.js');
+const authAdmin = require('../middlewareAdmin.js');
 const { Observaciones } = require('../models.js')
 const { Op } = require('sequelize');
 const { removeFile } = require('../AWS/S3Client.js')
 
 
-router.post('/', authRoute, async (req, res) => {
+router.post('/', authAdmin, async (req, res) => {
     const body = req.body;
 
     await Observaciones.create(body).then(data => {
@@ -43,7 +44,7 @@ router.get('/', async (req, res) => {
 });
 
 
-router.put('/', authRoute, async (req, res) => {
+router.put('/', authAdmin, async (req, res) => {
     const body = req.body;
 
     if(Object.keys(body).length === 0) {
@@ -67,7 +68,7 @@ router.put('/', authRoute, async (req, res) => {
 });
 
 
-router.delete('/:id', authRoute, async (req, res) => {
+router.delete('/:id', authAdmin, async (req, res) => {
     const id = req.params.id;
     let pathImg;
     try {

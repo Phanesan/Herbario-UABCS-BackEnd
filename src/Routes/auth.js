@@ -7,7 +7,7 @@ const {isEmail,isPassword,isName} = require('../utils.js')
 const authRoute = require('../middleware.js')
 
 const generateToken = (account) => {
-    const payload = { correo: account.correo };
+    const payload = { correo: account.correo, rol:account.rol };
     const secret = process.env.JWT_SECRET;
     const options = { expiresIn: '48h' };
     return jwt.sign(payload, secret, options);
